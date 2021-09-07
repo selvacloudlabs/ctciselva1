@@ -52,14 +52,47 @@ func arePermutation(str1 string , str2 string) bool {
         return true;
 }
 
+// O(n) time with O(n) extra space.
+func URLify(input string, truelen int) string {
+	spaces := 0
+
+	for idx_in := 0; idx_in< truelen; idx_in++ {
+	
+		if input[idx_in] == byte(' ') {
+			spaces++
+		}
+	}
+	// +2 for each space for the extra "20"s.
+	output := make([]byte, truelen+(2*spaces))
+	idx_out := truelen + spaces * 2 - 1;
+
+	for idx_in := truelen - 1; idx_in>=0 ;  idx_in-- {
+		if input[idx_in] == byte(' ') {
+			output[idx_out] = byte('0')
+			output[idx_out-1] = byte('2')
+			output[idx_out-2] = byte('%')
+			idx_out -= 3
+		} else {
+			output[idx_out] = input[idx_in]
+			idx_out--
+		}
+	}
+	return string(output)
+}
+
+
+
 func main() {
 	fmt.Println("################# 1.1 Unique string ################")
 	
 	fmt.Println(isUniqueChars("Hello"))
 	fmt.Println(isUniqueChars("Helo"))
-	fmt.Println("################# 1.1 Unique string ################")
+	fmt.Println("################# 1.2 Are Palindrome ################")
 	fmt.Println(arePermutation("Hello","ollHe"))
 	fmt.Println(arePermutation("Hello","oloHe"))
+	fmt.Println("################# 1.3 URLify ################")
+	fmt.Println(URLify("H el lo      ",7))
+
 
 }
 
