@@ -6,9 +6,8 @@ import (
 )
 
 type Queue struct {
-	head    *queueNode
-	tail    *queueNode
-	orderId int
+	head *queueNode
+	tail *queueNode
 }
 
 type queueNode struct {
@@ -31,23 +30,21 @@ func (q *Queue) Enqueue(value string) {
 	}
 }
 
-func (q *Queue) Dequeue() (string, time.Time) {
+func (q *Queue) Dequeue() *queueNode {
 
 	if q.head == nil {
-		return "", time.Now()
+		return nil
 	}
 
-	value, timeStamp := q.head.value, q.head.timeStamp
+	ret := q.head
 	q.head = q.head.next
 
-	return value, timeStamp
+	return ret
 }
 
-func (q *Queue) Peek() (string, time.Time) {
-	if q.head == nil {
-		return "", time.Now()
-	}
-	return q.head.value, q.head.timeStamp
+func (q *Queue) Peek() *queueNode {
+
+	return q.head
 }
 
 func (q *Queue) IsEmpty() bool {
@@ -55,46 +52,51 @@ func (q *Queue) IsEmpty() bool {
 }
 
 /*
-3.2 Stack Min: How would you design a stack which, in addition to push and pop, has a function min
-which returns the minimum element? Push, pop and min should all operate in 0(1) time.
+3.6 Animal Shelter: An animal shelter, which holds only dogs and cats, operates on a strictly"first in, first
+out" basis. People must adopt either the "oldest" (based on arrival time) of all animals at the shelter,
+or they can select whether they would prefer a dog or a cat (and will receive the oldest animal of
+that type). They cannot select which specific animal they would like. Create the data structures to
+maintain this system and implement operations such as enqueue, dequeueAny, dequeueDog,
+and dequeueCat. You may use the built-in Linkedlist data structure.
 */
-/*
 type animalQueue struct {
 	cat Queue
 	dog Queue
 }
 
-func (r *minStack) Push(value int) {
+func (aq *animalQueue) EnqueueAnimal(animalType string, animalName string) {
 
-	s.s1.Push(value)
-
-	// If S2 is empty or current value is minimum
-	if s.s2.IsEmpty() || value <= s.s2.Peek() {
-		s.s2.Push(value)
+	if animalType == "cat" {
+		aq.cat.Enqueue(animalName)
+	} else if animalType == "dog" {
+		aq.dog.Enqueue(animalName)
+	} else {
+		fmt.Println("Invalid animal Type")
 	}
-
 }
-func (s *minStack) Pop() int {
 
-	value := s.s1.Pop()
+func (aq *animalQueue) DequeueAnimal() *queueNode {
 
-	if value == s.s2.Peek() {
-		s.s2.Pop()
+	c := aq.cat.Peek()
+	d := aq.dog.Peek()
+
+	if c.timeStamp.Before(d.timeStamp) {
+		return aq.cat.Dequeue()
+	} else {
+		return aq.dog.Dequeue()
 	}
-
-	return value
 }
 
-func (s *minStack) Peek() int {
+func (aq *animalQueue) DequeueCat() *queueNode {
 
-	return s.s1.Peek()
+	return aq.cat.Dequeue()
 }
 
-func (s *minStack) Min() int {
+func (aq *animalQueue) DequeueDog() *queueNode {
 
-	return s.s2.Peek()
+	return aq.dog.Dequeue()
 }
-*/
+
 func main() {
 	fmt.Println("------------- Queue -----------------")
 
@@ -108,14 +110,14 @@ func main() {
 	q.Enqueue("catC")
 
 	fmt.Println(q.Peek())
-	name1, time1 := q.Dequeue()
-	fmt.Println("Name : ", name1, "Time : ", time1)
-	name2, time2 := q.Dequeue()
-	fmt.Println("Name : ", name2, "Time : ", time2)
+	//qn1 := q.Dequeue()
+	fmt.Println(q.Dequeue())
+	//qn2 := q.Dequeue()
+	//fmt.Println("Name : ", qn2.value, "Time : ", qn2.timeStamp)
 
-	if time1.Before(time2) {
-		fmt.Println("time1 is older ", time1)
-	}
+	//if qn1.timeStamp.Before(qn2.timeStamp) {
+	//	fmt.Println("time1 is older ", qn1.timeStamp)
+	//}
 
 	fmt.Println(q.Dequeue())
 	fmt.Println(q.IsEmpty())
@@ -127,20 +129,21 @@ func main() {
 
 	fmt.Println(q.IsEmpty())
 
-	/*
-		fmt.Println("------------- min Stacks -----------------")
+	fmt.Println("------------- ANimal Queue -----------------")
+	aq := animalQueue{}
 
-		minSt := minStack{}
-		minSt.Push(45)
-		minSt.Push(4)
-		minSt.Push(3)
-		minSt.Push(55)
-		minSt.Push(4)
-		minSt.Push(2)
-		fmt.Println("Peek : ", minSt.Peek())
-		fmt.Println("Min : ", minSt.Min())
-		fmt.Println(minSt.Pop())
-		fmt.Println("Peek : ", minSt.Peek())
-		fmt.Println("Min : ", minSt.Min())
-	*/
+	aq.EnqueueAnimal("cat", "catA")
+	aq.EnqueueAnimal("dog", "dogA")
+	aq.EnqueueAnimal("cat", "catB")
+	aq.EnqueueAnimal("cat", "catC")
+	aq.EnqueueAnimal("dog", "dogB")
+	aq.EnqueueAnimal("dog", "dogC")
+	aq.EnqueueAnimal("cat", "catD")
+
+	fmt.Println(aq.DequeueAnimal())
+	fmt.Println(aq.DequeueCat())
+	fmt.Println(aq.DequeueCat())
+	fmt.Println(aq.DequeueDog())
+	fmt.Println(aq.DequeueDog())
+
 }
