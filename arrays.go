@@ -1,11 +1,11 @@
 package main
 
-import ( 
+import (
 	"fmt"
-	"strings"
-	"strconv"
 	"math"
-      ) 
+	"strconv"
+	"strings"
+)
 
 /* 1.1 Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you
 cannot use additional data structures?
@@ -14,66 +14,65 @@ func isUniqueChars(str string) bool {
 
 	var charTable [128]bool
 
-	if (len(str) > 128){
-		return false;
+	if len(str) > 128 {
+		return false
 	}
 
-	for idx := 0; idx < len(str); idx++{
+	for idx := 0; idx < len(str); idx++ {
 
-	    key := str[idx];
+		key := str[idx]
 
-	    if (charTable[key]){
-		return false
-	    }
-	    charTable[key] = true
+		if charTable[key] {
+			return false
+		}
+		charTable[key] = true
 	}
 	return true
 }
 
-
-func arePermutation(str1 string , str2 string) bool {
+func arePermutation(str1 string, str2 string) bool {
 
 	var freqTable [128]int
 
-	if(len(str1) != len(str2)) { 
-    	   return false
-        }
+	if len(str1) != len(str2) {
+		return false
+	}
 
-  	for idx := 0; idx < len(str1); idx++ {
+	for idx := 0; idx < len(str1); idx++ {
 
-            key := str1[idx]
+		key := str1[idx]
 
-            freqTable[key]++
-  	}
+		freqTable[key]++
+	}
 
 	for idx := 0; idx < len(str2); idx++ {
 
-	    key := str2[idx]
+		key := str2[idx]
 
-            freqTable[key]--
+		freqTable[key]--
 
-            if freqTable[key]<0 { 
-              return false;
-            }
-        }
-        return true;
+		if freqTable[key] < 0 {
+			return false
+		}
+	}
+	return true
 }
 
 // O(n) time with O(n) extra space.
 func URLify(input string, truelen int) string {
 	spaces := 0
 
-	for idx_in := 0; idx_in< truelen; idx_in++ {
-	
+	for idx_in := 0; idx_in < truelen; idx_in++ {
+
 		if input[idx_in] == byte(' ') {
 			spaces++
 		}
 	}
 	// +2 for each space for the extra "20"s.
 	output := make([]byte, truelen+(2*spaces))
-	idx_out := truelen + spaces * 2 - 1;
+	idx_out := truelen + spaces*2 - 1
 
-	for idx_in := truelen - 1; idx_in>=0 ;  idx_in-- {
+	for idx_in := truelen - 1; idx_in >= 0; idx_in-- {
 		if input[idx_in] == byte(' ') {
 			output[idx_out] = byte('0')
 			output[idx_out-1] = byte('2')
@@ -95,47 +94,46 @@ func URLify(input string, truelen int) string {
  * Therefore the chars in string should fit one of the two possibilities:
  *  - Each char appear even number of times in the string ( even length string )
  *  - Each char should appear even number of times, except just one char ( odd length string )
- * 
+ *
  * We won't care about the case of the letter
  */
 
-func getFreqTableKey( ch byte ) int {
+func getFreqTableKey(ch byte) int {
 
-    key := -1;
+	key := -1
 
-    if  ch >= 'a' && ch <= 'z'  {
-        key = int(ch - 'a')
-    } else if  ch >= 'A' && ch <= 'Z'  {
-        key = int(ch - 'A')
-    } 
-   
-    return key;
+	if ch >= 'a' && ch <= 'z' {
+		key = int(ch - 'a')
+	} else if ch >= 'A' && ch <= 'Z' {
+		key = int(ch - 'A')
+	}
+
+	return key
 }
 
+func isPermutationOfPallindrome(str string) bool {
 
-func isPermutationOfPallindrome( str string) bool {
+	var freqTable [26]int
+	oddCount := 0
+	key := -1
 
-    var freqTable [26]int
-    oddCount := 0
-    key := -1
+	for idx := 0; idx < len(str); idx++ {
 
-    for idx := 0; idx < len(str); idx++ {
-    
-	key = getFreqTableKey(str[idx]);
+		key = getFreqTableKey(str[idx])
 
-        if key != -1  {
+		if key != -1 {
 
-           freqTable[key]++
+			freqTable[key]++
 
-           if freqTable[key] % 2 == 1  {
-              oddCount++
-           } else {
-              oddCount--
-           }
-        }
-        
-    }
-    return (oddCount <= 1);
+			if freqTable[key]%2 == 1 {
+				oddCount++
+			} else {
+				oddCount--
+			}
+		}
+
+	}
+	return (oddCount <= 1)
 }
 
 /*
@@ -149,14 +147,14 @@ func compressString(origStr string) string {
 	origLen := len(origStr)
 	var compStr string
 
-	if (origLen < 2) {
+	if origLen < 2 {
 		return origStr
 	}
 
 	count := 1
-	for idx := 1; idx < origLen; idx++  {
+	for idx := 1; idx < origLen; idx++ {
 
-		if (origStr[idx-1] == origStr[idx]) {
+		if origStr[idx-1] == origStr[idx] {
 			count++
 		} else {
 			compStr += string(origStr[idx-1]) + strconv.Itoa(count)
@@ -166,7 +164,7 @@ func compressString(origStr string) string {
 			return origStr
 		}
 	}
-	compStr += string(origStr[origLen-1])  + strconv.Itoa(count)
+	compStr += string(origStr[origLen-1]) + strconv.Itoa(count)
 
 	if len(compStr) >= origLen {
 		return origStr
@@ -179,20 +177,19 @@ of another. Given two strings, 51 and 52, write code to check if 52 is a rotatio
 call to i5Sub5tring (e.g., "waterbottle" is a rotation of" erbottlewat").
 */
 
-
 func isRotation(s1 string, s2 string) bool {
-	 
-	    /* check that s1 and s2 are equal length and not empty */
-	    if len(s1) == len(s2) && len(s1) > 0 { 
 
-	    	/* concatenate s1 and s1 within new buffer */
-		s1s1 := s1 + s1;
-	    	return strings.Contains(s1s1, s2);
-	    }
-	    return false;
+	/* check that s1 and s2 are equal length and not empty */
+	if len(s1) == len(s2) && len(s1) > 0 {
+
+		/* concatenate s1 and s1 within new buffer */
+		s1s1 := s1 + s1
+		return strings.Contains(s1s1, s2)
+	}
+	return false
 }
 
-/* 
+/*
  * Problem: There are three possible edits that can be performed on a string.
  * 1. Insert a char.
  * 2. Delete a char.
@@ -216,47 +213,45 @@ func isRotation(s1 string, s2 string) bool {
  *    string.
  */
 
+func oneEditAway(str1 string, str2 string) bool {
 
-func oneEditAway( str1 string, str2 string) bool {
+	len1 := len(str1)
+	len2 := len(str2)
+	var smaller, bigger string
 
-    len1 := len(str1)
-    len2 := len(str2)
-    var smaller,bigger string
+	if math.Abs(float64(len1-len2)) > 1 {
+		return false
+	}
 
-    if math.Abs(float64(len1 - len2))  > 1  {
-        return false;
-    }
+	if len1 < len2 {
+		smaller = str1
+		bigger = str2
+	} else {
+		smaller = str2
+		bigger = str1
 
-    if len1 < len2 {
-	smaller =  str1
-	bigger =  str2
-    } else  {
-	smaller =  str2
-	bigger =  str1
+	}
 
-    }
-    
-    var i,j  int 
-    mismatchDone := false
+	var i, j int
+	mismatchDone := false
 
-    for  i < len(smaller) && j < len(bigger)     {
+	for i < len(smaller) && j < len(bigger) {
 
-        if  smaller[i] != bigger[j]  {
-            if mismatchDone {
-                return false;
-            }
-            mismatchDone = true;
-            if  len1 == len2  {
-                i++;   //case of replace
-            }          // else case of replace.dont move small pointer
-        } else {
-               i++   //move short pointer if its a match, dont move it in case of first mismatch
-        }
-        j++;           //always move long string pointer.
-    }
-    return true;
+		if smaller[i] != bigger[j] {
+			if mismatchDone {
+				return false
+			}
+			mismatchDone = true
+			if len1 == len2 {
+				i++ //case of replace
+			} // else case of replace.dont move small pointer
+		} else {
+			i++ //move short pointer if its a match, dont move it in case of first mismatch
+		}
+		j++ //always move long string pointer.
+	}
+	return true
 }
-
 
 /**
  * Cracking the coding interview 1.8
@@ -266,40 +261,39 @@ func oneEditAway( str1 string, str2 string) bool {
  * We can use a boolean matrix of MxN or a bit vector to mark row and columns to be nullified in first iteration, but it wont be space efficient.
  * More space efficient would be to first check first row and column and if any of them contains zero, mark them to be nullified using two boolearn vars
  * let's say firstRow and firstCol, and then iterate through rest of the matrix and store information in first row column elements, only when that row
- * and column is to be marked for nullified, this way we will only change values in first row and column which are already going to be 0 in final solution. 
+ * and column is to be marked for nullified, this way we will only change values in first row and column which are already going to be 0 in final solution.
  */
 
 func nullifyRow(matrix [][]int, numColumns int, rowId int) {
-	for  j := 0; j < numColumns; j++  {
+	for j := 0; j < numColumns; j++ {
 		matrix[rowId][j] = 0
 	}
 }
 
-func nullifyColumn(matrix [][]int, numRows int, colId int ) {
-	for i := 0; i < numRows; i++  {
+func nullifyColumn(matrix [][]int, numRows int, colId int) {
+	for i := 0; i < numRows; i++ {
 		matrix[i][colId] = 0
 	}
 }
 
-
-func nullifyMatrix( matrix [][]int ) {
+func nullifyMatrix(matrix [][]int) {
 
 	numRows := len(matrix)
 	numColumns := len(matrix[0])
-	nullifyFirstRow := false;
+	nullifyFirstRow := false
 
 	//first row
-	for i := 0; i < numColumns; i++  {
-		if  matrix[0][i] == 0  {
+	for i := 0; i < numColumns; i++ {
+		if matrix[0][i] == 0 {
 			nullifyFirstRow = true
 			break
 		}
 	}
 
 	//rest of the matrix
-	for i := 1; i < numRows; i++  {
+	for i := 1; i < numRows; i++ {
 		nullifyThisRow := false
-		for j := 0; j < numColumns; j++  {
+		for j := 0; j < numColumns; j++ {
 			if matrix[i][j] == 0 {
 				matrix[0][j] = 0
 				nullifyThisRow = true
@@ -312,15 +306,15 @@ func nullifyMatrix( matrix [][]int ) {
 
 	//now we know which column to be nullify using information stored in previous step.
 	//cols first
-	for j := 0; j < numColumns; j++  {
-		if matrix[0][j] == 0  {
-			nullifyColumn(matrix, numRows,  j);
+	for j := 0; j < numColumns; j++ {
+		if matrix[0][j] == 0 {
+			nullifyColumn(matrix, numRows, j)
 		}
 	}
 
 	//now first row
-	if nullifyFirstRow  {
-		nullifyRow(matrix, numColumns, 0);
+	if nullifyFirstRow {
+		nullifyRow(matrix, numColumns, 0)
 	}
 
 }
@@ -335,129 +329,121 @@ func nullifyMatrix( matrix [][]int ) {
  * 			   I have solved it perform anticlockwise 90' rotation, it can be done similarly for clockwise rotatation.
  */
 
- 
 func transposeMatrix(matrix [][]int, N int) {
 
-	for i := 0; i < N; i++  {
-		for j := i+1; j < N; j++  {
-			if  i != j  {
-				matrix[i][j], matrix[j][i] = matrix[j][i],matrix[i][j];
+	for i := 0; i < N; i++ {
+		for j := i + 1; j < N; j++ {
+			if i != j {
+				matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
 			}
 		}
 	}
 }
 
-func reverseRow( row []int,N int ) {
-	for  i := 0; i < N/2; i++  {
+func reverseRow(row []int, N int) {
+	for i := 0; i < N/2; i++ {
 		row[i], row[N-i-1] = row[N-i-1], row[i]
 	}
 }
 
-func rotateMatrix(matrix [][]int) bool{
+func rotateMatrix(matrix [][]int) bool {
 
 	if len(matrix) == 0 || len(matrix) != len(matrix[0]) {
-		return false; // Not a square
+		return false // Not a square
 	}
 	N := len(matrix)
-	
+
 	//transpose matrix
-	transposeMatrix(matrix, N);
+	transposeMatrix(matrix, N)
 
 	// reverse each row
-	for  i := 0; i < N; i++  {
-		reverseRow(matrix[i], N);
+	for i := 0; i < N; i++ {
+		reverseRow(matrix[i], N)
 	}
 	return true
 }
 
-
-
-func rotateMatrix2(matrix [][] int) bool {
+func rotateMatrix2(matrix [][]int) bool {
 
 	if len(matrix) == 0 || len(matrix) != len(matrix[0]) {
-		return false; // Not a square
+		return false // Not a square
 	}
 	n := len(matrix)
-	
 
-	for layer := 0; layer < n / 2; layer++ {
+	for layer := 0; layer < n/2; layer++ {
 		first := layer
 		last := n - 1 - layer
 		//fmt.Printf("\nOUTER : layer = %d ; first = %d ; last = %d\n",layer,first,last)
 		for i := first; i < last; i++ {
 			offset := i - first
 			top := matrix[first][i] // save top
-		//fmt.Printf("\n    INNER : i = %d ; offset = %d ; last-offset = %d\n",i,offset,last-offset)
+			//fmt.Printf("\n    INNER : i = %d ; offset = %d ; last-offset = %d\n",i,offset,last-offset)
 
-		//fmt.Printf("        BFR : matrix[first][i] = %d  matrix[last-offset][first] = %d matrix[last][last - offset] = %d matrix[i][last] = %d\n",matrix[first][i], matrix[last-offset][first],matrix[last][last - offset],matrix[i][last])
+			//fmt.Printf("        BFR : matrix[first][i] = %d  matrix[last-offset][first] = %d matrix[last][last - offset] = %d matrix[i][last] = %d\n",matrix[first][i], matrix[last-offset][first],matrix[last][last - offset],matrix[i][last])
 			// left -> top
-			matrix[first][i] = matrix[last-offset][first] 			
+			matrix[first][i] = matrix[last-offset][first]
 
 			// bottom -> left
-			matrix[last-offset][first] = matrix[last][last - offset] 
+			matrix[last-offset][first] = matrix[last][last-offset]
 
 			// right -> bottom
-			matrix[last][last - offset] = matrix[i][last] 
+			matrix[last][last-offset] = matrix[i][last]
 
 			// top -> right
 			matrix[i][last] = top // right <- saved top
-		//fmt.Printf("        AFR : matrix[first][i] = %d  matrix[last-offset][first] = %d matrix[last][last - offset] = %d matrix[i][last] = %d\n",matrix[first][i], matrix[last-offset][first],matrix[last][last - offset],matrix[i][last])
+			//fmt.Printf("        AFR : matrix[first][i] = %d  matrix[last-offset][first] = %d matrix[last][last - offset] = %d matrix[i][last] = %d\n",matrix[first][i], matrix[last-offset][first],matrix[last][last - offset],matrix[i][last])
 		}
 	}
-	return true;
+	return true
 }
-	
+
 func main() {
 	fmt.Println("################# 1.1 Unique string ################")
-	
+
 	fmt.Println(isUniqueChars("Hello"))
 	fmt.Println(isUniqueChars("Helo"))
 	fmt.Println("################# 1.2 Are Palindrome ################")
-	fmt.Println(arePermutation("Hello","ollHe"))
-	fmt.Println(arePermutation("Hello","oloHe"))
+	fmt.Println(arePermutation("Hello", "ollHe"))
+	fmt.Println(arePermutation("Hello", "oloHe"))
 	fmt.Println("################# 1.3 URLify ################")
-	fmt.Println(URLify("H el lo      ",7))
+	fmt.Println(URLify("H el lo      ", 7))
 	fmt.Println("################# 1.4 Permutation palindrome ################")
 	fmt.Println(isPermutationOfPallindrome("TactCooa"))
 
-        fmt.Println("################# 1.5 One Edit away ################")
-        fmt.Println(oneEditAway("pal","pa3"))
-
+	fmt.Println("################# 1.5 One Edit away ################")
+	fmt.Println(oneEditAway("pal", "pa3"))
 
 	fmt.Println("################# 1.6 Compress STring ################")
 	fmt.Println(compressString("aaaabbb"))
 
 	fmt.Println("################# 1.7 Rotate Matrix ################")
-        matrix := [][]int{
-		        []int{1,2,3,4},
-		        []int{5,6,7,8},
-		        []int{9,10,11,12},
-		        []int{13,14,15,16},
-                      }
+	matrix := [][]int{
+		[]int{1, 2, 3, 4},
+		[]int{5, 6, 7, 8},
+		[]int{9, 10, 11, 12},
+		[]int{13, 14, 15, 16},
+	}
 
 	fmt.Println(matrix)
 	rotateMatrix(matrix)
 	fmt.Println(matrix)
-	
-/*
-	fmt.Println("################# 1.8 Zero Matrix ################")
-        matrix1 := [][]int{
-		        []int{1,2,0},
-		        []int{4,0,6},
-		        []int{7,8,9},
-                      }
+
+	/*
+	   	fmt.Println("################# 1.8 Zero Matrix ################")
+	           matrix1 := [][]int{
+	   		        []int{1,2,0},
+	   		        []int{4,0,6},
+	   		        []int{7,8,9},
+	                         }
 
 
-	fmt.Println(matrix1)
-	nullifyMatrix(matrix1)
-	fmt.Println(matrix1)	
+	   	fmt.Println(matrix1)
+	   	nullifyMatrix(matrix1)
+	   	fmt.Println(matrix1)
 
 
-	fmt.Println("################# 1.9 String Rotation ################")
-	fmt.Println(isRotation("waterbottle","erbottlewatq"))
-*/
-
-
+	   	fmt.Println("################# 1.9 String Rotation ################")
+	   	fmt.Println(isRotation("waterbottle","erbottlewatq"))
+	*/
 
 }
-
